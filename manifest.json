@@ -1,0 +1,30 @@
+{
+  "name": "coc.local",
+  "description": "solve it locally",
+  "version": "0.1",
+  "manifest_version": 3,
+  "content_scripts": [
+    {
+      "matches": ["http://127.0.0.1:5500/*", "https://www.codingame.com/ide/*"],
+      "js": [
+        "prism/prism.min.js",
+        "prism/prism-javascript.min.js",
+        "prism/prism-python.min.js",
+        "prism/prism-go.min.js",
+        "prism/prism-rust.min.js",
+        "prism/prism-toolbar.min.js",
+        "prism/prism-copy-to-clipboard.min.js",
+        "templates/go.js",
+        "templates/javascript.js",
+        "templates/python.js",
+        "templates/rust.js",
+        "content_script.js"
+      ],
+      "css": [
+        "prism/prism-okaidia.min.css",
+        "prism/prism-toolbar.min.css",
+        "content_script.css"
+      ]
+    }
+  ]
+}
