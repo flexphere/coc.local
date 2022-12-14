@@ -20,24 +20,38 @@ $.addEventListener("click", (e) => {
   }
 });
 
-const testCases = Array.from($.querySelectorAll(".testcase-content")).map(
-  (el) => {
-    return {
-      input: el.querySelector(".testcase-in").innerHTML,
-      output: el.querySelector(".testcase-out").innerHTML,
-    };
+let timer = setInterval(() => {
+  testCases = getTestCases();
+  if (testCases.length) {
+    clearInterval(timer);
+    generateTests();
+    Prism.highlightAll();
   }
-);
+}, 1000);
 
-for (const lang of [go, javascript, rust, python]) {
-  placeholder.innerHTML += `
-    <details>
-      <summary>${lang.name}</summary>
-      <pre>
-        <code class="language-${lang.name}">${lang(testCases)}</code>
-      </pre>
-    </details>
-  `;
+function getTestCases() {
+  const testCases = Array.from(document.querySelectorAll(".testcase-content,.statement-inout")).map(
+    (el) => {
+      return {
+        input: el.querySelectorAll(".testcase-in,.question-statement-example-in")[0].innerHTML,
+        output: el.querySelectorAll(".testcase-out,.question-statement-example-out")[0].innerHTML,
+      };
+    }
+  );
+  return testCases;
+}
+
+function generateTests() {
+  for (const lang of [go, javascript, rust, python]) {
+    placeholder.innerHTML += `
+      <details>
+        <summary>${lang.name}</summary>
+        <pre>
+          <code class="language-${lang.name}">${lang(testCases)}</code>
+        </pre>
+      </details>
+    `;
+  }
 }
 
 function hide() {
