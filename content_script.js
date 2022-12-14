@@ -20,28 +20,9 @@ $.addEventListener("click", (e) => {
   }
 });
 
-let timer = setInterval(() => {
-  testCases = getTestCases();
-  if (testCases.length) {
-    clearInterval(timer);
-    generateTests();
-    Prism.highlightAll();
-  }
-}, 1000);
+async function start() {
+  const testCases = await getTestCases()
 
-function getTestCases() {
-  const testCases = Array.from($.querySelectorAll(".testcase-content,.statement-inout")).map(
-    (el) => {
-      return {
-        input: el.querySelectorAll(".testcase-in,.question-statement-example-in")[0].innerHTML,
-        output: el.querySelectorAll(".testcase-out,.question-statement-example-out")[0].innerHTML,
-      };
-    }
-  );
-  return testCases;
-}
-
-function generateTests() {
   for (const lang of [go, javascript, rust, python]) {
     placeholder.innerHTML += `
       <details>
@@ -52,6 +33,8 @@ function generateTests() {
       </details>
     `;
   }
+
+  Prism.highlightAll();
 }
 
 function hide() {
@@ -60,6 +43,46 @@ function hide() {
 }
 
 function show() {
+  start();
   placeholder.classList.add("active");
   overlay.classList.add("active");
 }
+
+
+async function getTestCases() {
+  const clashId = location.href.split(`/`).at(-1);
+  
+  const headers =  {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  };
+
+  const res = await fetch("https://www.codingame.com/services/TestSession/startTestSession",{
+      headers,
+      method: "POST",
+      body: JSON.stringify([clashId])
+  })
+  
+  const json = await res.json()
+
+  const alltests = Promise.all(json.currentQuestion.question.testCases.map(async (testCases) => {
+    return await getSingleTestCase(testCases.inputBinaryId, testCases.outputBinaryId);
+  }))
+
+  return alltests;
+}
+
+async function getSingleTestCase(inputId, outputId) {
+  let input, output;
+  {
+    const res = await fetch(`https://static.codingame.com/servlet/fileservlet?id=${inputId}`);
+    input = await res.text()
+  }
+  {
+    const res = await fetch(`https://static.codingame.com/servlet/fileservlet?id=${outputId}`);
+    output = await res.text()
+  }
+  return {input, output}
+}
+
+
