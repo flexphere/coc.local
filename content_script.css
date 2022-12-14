@@ -19,7 +19,7 @@
   background: #333;
   border-radius: 2%;
   transform: translate(-50%, -50%);
-  overflow: scroll;
+  overflow: auto;
   z-index: 9999;
   color: #fff;
 }

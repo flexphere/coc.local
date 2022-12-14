@@ -1,5 +1,12 @@
 const $ = document;
 
+const FileExt = {
+  go: "go",
+  rust: "rs",
+  javascript: "js",
+  python: "py",
+};
+
 const overlay = $.createElement("div");
 overlay.id = "coc_scraper_overlay";
 $.body.append(overlay);
@@ -28,7 +35,7 @@ async function start() {
     placeholder.innerHTML += `
       <details>
         <summary>${lang.name}</summary>
-        <pre>
+        <pre data-src="coc.${FileExt[lang.name]}" data-download-link>
           <code class="language-${lang.name}">${lang(testCases)}</code>
         </pre>
       </details>
@@ -36,6 +43,16 @@ async function start() {
   }
 
   Prism.highlightAll();
+  Prism.plugins.toolbar.registerButton('download-files', function (env) {
+    var pre = env.element.parentNode;
+    if (!pre || !/pre/i.test(pre.nodeName) || !pre.hasAttribute('data-src')) return;
+    var a = document.createElement('a');
+    a.textContent = 'Download';
+    a.setAttribute('download', '');
+    a.setAttribute('target', '_blank');
+    a.href = pre.getAttribute('data-src');
+    return a;
+  });
 }
 
 function hide() {
