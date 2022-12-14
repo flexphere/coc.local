@@ -8,6 +8,14 @@ const placeholder = $.createElement("div");
 placeholder.id = "coc_scraper";
 $.body.append(placeholder);
 
+const toggle = $.createElement("div");
+toggle.id = "coc_scraper_toggle";
+$.body.append(toggle);
+
+toggle.addEventListener("click", () => {
+  placeholder.classList.contains("active") ? hide() : show();
+});
+
 $.addEventListener("keypress", (e) => {
   if (e.key === "/" && e.ctrlKey) {
     placeholder.classList.contains("active") ? hide() : show();

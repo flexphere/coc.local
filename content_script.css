@@ -1,3 +1,13 @@
+#coc_scraper_toggle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: red;
+  cursor: pointer;
+  z-index: 9997;
+}
 #coc_scraper_overlay {
   position: fixed;
   top: 0;
