@@ -21,7 +21,8 @@ $.addEventListener("click", (e) => {
 });
 
 async function start() {
-  const testCases = await getTestCases()
+  placeholder.innerHTML = "";
+  const testCases = await getTestCases();
 
   for (const lang of [go, javascript, rust, python]) {
     placeholder.innerHTML += `
@@ -48,26 +49,33 @@ function show() {
   overlay.classList.add("active");
 }
 
-
 async function getTestCases() {
   const clashId = location.href.split(`/`).at(-1);
-  
-  const headers =  {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
+
+  const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
   };
 
-  const res = await fetch("https://www.codingame.com/services/TestSession/startTestSession",{
+  const res = await fetch(
+    "https://www.codingame.com/services/TestSession/startTestSession",
+    {
       headers,
       method: "POST",
-      body: JSON.stringify([clashId])
-  })
-  
-  const json = await res.json()
+      body: JSON.stringify([clashId]),
+    }
+  );
 
-  const alltests = Promise.all(json.currentQuestion.question.testCases.map(async (testCases) => {
-    return await getSingleTestCase(testCases.inputBinaryId, testCases.outputBinaryId);
-  }))
+  const json = await res.json();
+
+  const alltests = Promise.all(
+    json.currentQuestion.question.testCases.map(async (testCases) => {
+      return await getSingleTestCase(
+        testCases.inputBinaryId,
+        testCases.outputBinaryId
+      );
+    })
+  );
 
   return alltests;
 }
@@ -75,14 +83,16 @@ async function getTestCases() {
 async function getSingleTestCase(inputId, outputId) {
   let input, output;
   {
-    const res = await fetch(`https://static.codingame.com/servlet/fileservlet?id=${inputId}`);
-    input = await res.text()
+    const res = await fetch(
+      `https://static.codingame.com/servlet/fileservlet?id=${inputId}`
+    );
+    input = await res.text();
   }
   {
-    const res = await fetch(`https://static.codingame.com/servlet/fileservlet?id=${outputId}`);
-    output = await res.text()
+    const res = await fetch(
+      `https://static.codingame.com/servlet/fileservlet?id=${outputId}`
+    );
+    output = await res.text();
   }
-  return {input, output}
+  return { input, output };
 }
-
-
