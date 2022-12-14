@@ -14,10 +14,13 @@
         "prism/prism-rust.min.js",
         "prism/prism-toolbar.min.js",
         "prism/prism-copy-to-clipboard.min.js",
+        "prism/prism-download.js",
         "templates/go.js",
         "templates/javascript.js",
         "templates/python.js",
         "templates/rust.js",
+        "util/coc.js",
+        "util/file.js",
         "content_script.js"
       ],
       "css": [

@@ -1,98 +1,47 @@
-const $ = document;
-
-const overlay = $.createElement("div");
+const overlay = document.createElement("div");
 overlay.id = "coc_scraper_overlay";
-$.body.append(overlay);
+document.body.append(overlay);
 
-const placeholder = $.createElement("div");
+const placeholder = document.createElement("div");
 placeholder.id = "coc_scraper";
-$.body.append(placeholder);
+document.body.append(placeholder);
 
-$.addEventListener("keydown", (e) => {
+document.addEventListener("keydown", (e) => {
   if (e.key === "/" && e.ctrlKey) {
-    placeholder.classList.contains("active") ? hide() : show();
+    placeholder.classList.contains("active") ? reset() : generate();
   }
 });
 
-$.addEventListener("click", (e) => {
+document.addEventListener("click", (e) => {
   if (e.target.id === "coc_scraper_overlay") {
-    hide();
+    reset();
   }
 });
 
-async function start() {
-  placeholder.innerHTML = "";
+async function generate() {
   const testCases = await getTestCases();
 
   for (const lang of [go, javascript, rust, python]) {
+    const code = lang(testCases);
+    const { name, url } = createDataUrl(code, lang);
     placeholder.innerHTML += `
       <details>
         <summary>${lang.name}</summary>
-        <pre>
-          <code class="language-${lang.name}">${lang(testCases)}</code>
+        <pre data-src="${url}" data-filename="${name}">
+          <code class="language-${lang.name}">${code}</code>
         </pre>
       </details>
     `;
   }
 
   Prism.highlightAll();
-}
 
-function hide() {
-  placeholder.classList.remove("active");
-  overlay.classList.remove("active");
-}
-
-function show() {
-  start();
   placeholder.classList.add("active");
   overlay.classList.add("active");
 }
 
-async function getTestCases() {
-  const clashId = location.href.split(`/`).at(-1);
-
-  const headers = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  };
-
-  const res = await fetch(
-    "https://www.codingame.com/services/TestSession/startTestSession",
-    {
-      headers,
-      method: "POST",
-      body: JSON.stringify([clashId]),
-    }
-  );
-
-  const json = await res.json();
-
-  const alltests = Promise.all(
-    json.currentQuestion.question.testCases.map(async (testCases) => {
-      return await getSingleTestCase(
-        testCases.inputBinaryId,
-        testCases.outputBinaryId
-      );
-    })
-  );
-
-  return alltests;
-}
-
-async function getSingleTestCase(inputId, outputId) {
-  let input, output;
-  {
-    const res = await fetch(
-      `https://static.codingame.com/servlet/fileservlet?id=${inputId}`
-    );
-    input = await res.text();
-  }
-  {
-    const res = await fetch(
-      `https://static.codingame.com/servlet/fileservlet?id=${outputId}`
-    );
-    output = await res.text();
-  }
-  return { input, output };
+function reset() {
+  placeholder.classList.remove("active");
+  overlay.classList.remove("active");
+  placeholder.innerHTML = "";
 }
