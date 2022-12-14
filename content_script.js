@@ -30,7 +30,7 @@ let timer = setInterval(() => {
 }, 1000);
 
 function getTestCases() {
-  const testCases = Array.from(document.querySelectorAll(".testcase-content,.statement-inout")).map(
+  const testCases = Array.from($.querySelectorAll(".testcase-content,.statement-inout")).map(
     (el) => {
       return {
         input: el.querySelectorAll(".testcase-in,.question-statement-example-in")[0].innerHTML,

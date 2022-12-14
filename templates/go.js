@@ -16,7 +16,7 @@ function go(data) {
   }
   
   func solve(input string) string {
-    return "somu"
+    return "your answer here"
   }
   
   func runTests() {

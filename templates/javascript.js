@@ -5,7 +5,7 @@ function javascript(data) {
     ];
     
     function solve(input) {
-      return "ead"
+      return "your answer here"
     }
 
     function runTests() {

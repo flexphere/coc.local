@@ -10,7 +10,7 @@ function rust(data) {
         }
 
         fn solve(input:&str)->&str{
-          return "Solved"
+          return "your answer here"
         }
         
         #[test]

@@ -5,7 +5,7 @@ function python(data) {
     ]
 
     def solve(input):
-      return "somu"
+      return "your answer here"
 
     def runTests():
       for i, testCase in enumerate(testCases):
