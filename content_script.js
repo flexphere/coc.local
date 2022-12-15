@@ -19,17 +19,16 @@ document.addEventListener("click", (e) => {
 });
 
 async function generate() {
-  const testCases = await getTestCases();
+  const clashId = location.href.split(`/`).at(-1);
+  const question = await getQuestion(clashId);
 
   for (const lang of [go, javascript, rust, python]) {
-    const code = lang(testCases);
+    const code = lang(question);
     const { name, url } = createDataUrl(code, lang);
     placeholder.innerHTML += `
       <details>
         <summary>${lang.name}</summary>
-        <pre data-src="${url}" data-filename="${name}">
-          <code class="language-${lang.name}">${code}</code>
-        </pre>
+        <pre data-src="${url}" data-filename="${name}"><code class="language-${lang.name}">${code}</code></pre>
       </details>
     `;
   }

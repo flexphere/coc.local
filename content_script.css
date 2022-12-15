@@ -26,7 +26,7 @@
   color: #fff;
 }
 
-#coc_scraper, #coc_scraper_overlay {
+#coc_scraper, #coc_scraper_overlay, #coc_scraper code.language-none {
   display: none;
 }
 
